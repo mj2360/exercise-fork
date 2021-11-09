@@ -25,6 +25,45 @@ router.get("/", (req, res) => {
             <button type="submit">Submit</button>
         </form>
     `);
+
+  const firestore = require("firebase/firestore");
+
+  const db = firestore.getFirestore();
+
+  router.get("/", (req, res) => res.send(form));
+
+  router.get("/submit", (req, res) => {
+    const queryParams = req.query;
+    const title = queryParams.articleTitle;
+    const text = queryParams.articleText;
+    const author = queryParams.author;
+
+    const idFromTitle = title.replace(/\s+/g, "-").toLowerCase();
+
+    const setBlogPost = firestore.setDoc(
+      firestore.doc(db, "blogpost", idFromTitle),
+      {
+        //if key is same as value you don't have to do : value
+        title: title,
+        text: text,
+        author: author,
+      }
+    );
+
+    setBlogPost
+      .then((response) => {
+        console.log("Success");
+        res.send(`
+          <h1>Submission Successful</h1>
+          <p><a href="/create">Add Another Post</a></p>
+        `);
+      })
+      .catch((error) => res.send(error));
+
+    console.log();
+
+    res.send("?");
+  });
 });
 
 module.exports = router;

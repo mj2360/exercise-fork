@@ -2,9 +2,9 @@ const express = require("express");
 
 const router = express.Router();
 
-const firebase = require("firebase/firestore/lite"); //fix
+const firestore = require("firebase/firestore/lite");
 
-const db = firebase.getFirestore(); //fix
+const db = firebase.getFirestore();
 
 router.get("/", (req, res) => {
   const blogpost = firestore.getDocs(firestore.collection(db, "blogpost"));
